@@ -1,4 +1,5 @@
 const express = require('express');
+const offerRoutes = require('./offer.routes'); // @description offer routes
 
 const router = express.Router();
 
@@ -12,5 +13,8 @@ const router = express.Router();
 router.get('/', (req, res) => {
   res.send('Lead Qualification Backend API is running!');
 });
+
+// offer routes
+router.use('/offers', offerRoutes);
 
 module.exports = router;
