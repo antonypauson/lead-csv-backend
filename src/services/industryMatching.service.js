@@ -154,5 +154,7 @@ function matchIndustry(leadIndustry, idealUseCases) {
 }
 
 module.exports = {
-  matchIndustry
+  matchIndustry,
+  INDUSTRY_SCORES,
+  INDUSTRY_SYNONYMS,
 };
