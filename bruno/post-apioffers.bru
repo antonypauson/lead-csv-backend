@@ -1,0 +1,20 @@
+meta {
+  name: POST /api/offers
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/api/offers
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "AI Outreach Automatino",
+    "value_props": ["24/7 Integration", "6x more meetings"],
+    "ideal_use_cases": ["B2B Saas mid-market"]
+  }
+  
+}
