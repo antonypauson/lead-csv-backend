@@ -101,21 +101,35 @@ function matchIndustry(leadIndustry, idealUseCases) {
 
   // Adjacent Match Logic - Synonyms (Score: 10)
   for (const useCase of normalizedUseCases) {
-    const synonyms = INDUSTRY_SYNONYMS[useCase];
-    if (synonyms) {
-      for (const synonym of synonyms) {
-        if (
-          normalizedLeadIndustry.includes(synonym) ||
-          synonym.includes(normalizedLeadIndustry)
-        ) {
-          matchedKeywords.add(synonym);
+    // Check if useCase has synonyms and leadIndustry matches any of them
+    const synonymsForUseCase = INDUSTRY_SYNONYMS[useCase];
+    if (synonymsForUseCase) {
+      for (const synonym of synonymsForUseCase) {
+        if (normalizedLeadIndustry.includes(synonym) || synonym.includes(normalizedLeadIndustry)) {
+          matchedKeywords.add(synonym); // Add the matched synonym
           return {
-            matchType: "adjacent",
+            matchType: 'adjacent',
             score: INDUSTRY_SCORES.adjacent,
             reasoning: `Adjacent industry match: "${leadIndustry}" is a synonym of "${useCase}" via "${synonym}"`,
-            matchedKeywords: Array.from(matchedKeywords),
+            matchedKeywords: Array.from(matchedKeywords)
           };
         }
+      }
+    }
+
+    // Check if leadIndustry has synonyms and useCase matches any of them
+    // This requires iterating through all primary terms in INDUSTRY_SYNONYMS
+    for (const primaryTerm in INDUSTRY_SYNONYMS) {
+      const synonyms = INDUSTRY_SYNONYMS[primaryTerm];
+      if (synonyms.includes(normalizedLeadIndustry) && (synonyms.includes(useCase) || primaryTerm === useCase)) {
+        matchedKeywords.add(normalizedLeadIndustry);
+        matchedKeywords.add(useCase);
+        return {
+          matchType: 'adjacent',
+          score: INDUSTRY_SCORES.adjacent,
+          reasoning: `Adjacent industry match: "${leadIndustry}" and "${useCase}" are related via "${primaryTerm}"`,
+          matchedKeywords: Array.from(matchedKeywords)
+        };
       }
     }
   }
