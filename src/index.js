@@ -1,8 +1,7 @@
-// imports
 const express = require('express');
 const helmet = require('helmet'); 
 const cors = require('cors');
-require('dotenv').config();
+const config = require('./config'); // configuration service
 
 // express
 const app = express();
@@ -13,8 +12,8 @@ app.use(cors()); // cors
 app.use(express.json()); // json handling requests
 app.use(express.urlencoded({ extended: true })); //urlencoded data parsing
 
-// PORT 
-const PORT = process.env.PORT || 3000;
+// PORT from config service
+const PORT = config.port;
 
 // testing purposes
 app.get('/', (req, res) => {
@@ -22,9 +21,9 @@ app.get('/', (req, res) => {
 });
 
 // Server Listening to PORT
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(config.port, () => {
+  console.log(`Server is running on port ${PORT} in ${config.env} mode`);
 });
 
-// export this app
+// export this
 module.exports = app;
