@@ -99,7 +99,6 @@ async function analyzeLeadIntent(prompt, retries = 3) {
         max_tokens: 150,
       });
       const rawResponse = completion.choices[0].message.content;
-      console.log('Groq Raw Response:', rawResponse); // Debug log
       return rawResponse;
     } catch (error) {
       console.error(`Groq API call failed (attempt ${i + 1}/${retries}):`, error.message);
@@ -164,7 +163,6 @@ async function getAiLeadScore(lead, offer, ruleScore) {
     const aiResponse = await analyzeLeadIntent(prompt);
     logs.push('AI Response received.');
     const parsedResponse = parseAIResponse(aiResponse);
-    console.log('Parsed AI Response:', parsedResponse); // Debug log
     aiIntent = parsedResponse.intent;
     aiReasoning = parsedResponse.reasoning;
     aiScore = convertIntentToScore(aiIntent);
