@@ -4,7 +4,7 @@
  */
 
 const scoringService = require('../services/scoring.service');
-const { sendSuccess, sendError } = require('../utils/responseHandler');
+const { sendSuccessResponse, sendErrorResponse } = require('../utils/responseHandler');
 const { validate } = require('../utils/validation');
 
 /**
@@ -35,9 +35,9 @@ const scoreLeads = async (req, res) => {
     const { offerId, leadIds } = req.body;
     const results = await scoringService.processLeadsForScoring(offerId, leadIds);
 
-    sendSuccess(res, 200, 'Leads scored successfully', { results });
+    sendSuccessResponse(res, 200, { results }, 'Leads scored successfully');
   } catch (error) {
-    sendError(res, error.message, error.statusCode || 400);
+    sendErrorResponse(res, error.statusCode || 400, error.message);
   }
 };
 
@@ -65,9 +65,9 @@ const getResults = (req, res) => {
       average_score: parseFloat(averageScore.toFixed(2)),
     };
 
-    sendSuccess(res, 200, 'Scoring results retrieved successfully', { results, summary });
+    sendSuccessResponse(res, 200, { results, summary }, 'Scoring results retrieved successfully');
   } catch (error) {
-    sendError(res, error.message, error.statusCode || 500);
+    sendErrorResponse(res, error.statusCode || 500, error.message);
   }
 };
 
