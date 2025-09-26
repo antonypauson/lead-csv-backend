@@ -25,9 +25,13 @@ const upload = multer({
   storage: storage,
   //file limit
   limits: { fileSize: 5 * 1024 * 1024 },
-  //mimetype: csv only
+  //mimetype: csv only (with fallback to file extension)
   fileFilter: (req, file, cb) => {
-    if (file.mimetype === 'text/csv') { 
+    const allowedMimeTypes = ['text/csv', 'application/csv', 'text/plain'];
+    const isValidMimeType = allowedMimeTypes.includes(file.mimetype);
+    const isValidExtension = file.originalname.toLowerCase().endsWith('.csv');
+    
+    if (isValidMimeType || isValidExtension) { 
       cb(null, true);
     } else {
       cb(new Error('Only CSV files are allowed!'), false);
