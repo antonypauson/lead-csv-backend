@@ -60,7 +60,28 @@ const processUploadedLeads = async (filePath) => {
  */
 const getLeadsData = () => leadsData;
 
+/**
+ * @function getLeadsByIds
+ * @description Retrieves specific leads by their IDs from all batches.
+ * @param {string[]} leadIds - Array of lead IDs to retrieve.
+ * @returns {object[]} Array of lead objects matching the provided IDs.
+ */
+const getLeadsByIds = (leadIds) => {
+  const allLeads = [];
+  
+  // Extract leads from all batches
+  Object.values(leadsData).forEach(batch => {
+    if (Array.isArray(batch)) {
+      allLeads.push(...batch);
+    }
+  });
+  
+  // Filter leads by the requested IDs
+  return allLeads.filter(lead => leadIds.includes(lead.id));
+};
+
 module.exports = {
   processUploadedLeads,
   getLeadsData,
+  getLeadsByIds,
 };
