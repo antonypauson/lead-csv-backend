@@ -36,7 +36,17 @@ function getAllOffers() {
   return offers;
 }
 
+/**
+ * Retrieves a specific offer by its ID.
+ * @param {string} id - The unique identifier of the offer.
+ * @returns {Offer|undefined} The offer object if found, undefined otherwise.
+ */
+function getOfferById(id) {
+  return offers.find(offer => offer.id === id);
+}
+
 module.exports = {
   createOffer,
   getAllOffers,
+  getOfferById,
 };
