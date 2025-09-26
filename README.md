@@ -258,3 +258,6 @@ The application follows a service-oriented architecture with distinct layers:
 -   **Utils**: Provides helper functions and common utilities.
 
 The system uses in-memory storage for offers and leads, which is suitable for the current scope of the project.
+
+### Code Documentation
+JSDoc is used throughout the codebase for comprehensive code documentation, ensuring clarity, maintainability, and ease of understanding for developers.
