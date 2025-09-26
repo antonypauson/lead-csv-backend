@@ -1,6 +1,7 @@
 const express = require('express');
 const offerRoutes = require('./offer.routes'); // @description offer routes
 const leadsRoutes = require('./leads.routes'); // @description leads routes
+const scoringRoutes = require('./scoring.routes'); // @description scoring routes
 
 const router = express.Router();
 
@@ -19,5 +20,7 @@ router.get('/', (req, res) => {
 router.use('/offers', offerRoutes);
 // leads routes
 router.use('/leads', leadsRoutes);
+// scoring routes
+router.use('/', scoringRoutes);
 
 module.exports = router;
