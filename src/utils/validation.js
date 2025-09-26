@@ -1,4 +1,14 @@
 /**
+ * @file validation.js
+ * @description Provides utility functions for data validation, including offer validation and generic JSON schema validation.
+ */
+
+const Ajv = require('ajv');
+const addFormats = require('ajv-formats'); // Import ajv-formats
+const ajv = new Ajv({ allErrors: true, coerceTypes: true, useDefaults: true }); // Options for better error reporting and type coercion
+addFormats(ajv); // Register formats with Ajv instance
+
+/**
  * Validates the data for creating a new offer.
  * @param {object} offerData - The data for the new offer.
  * @param {string} offerData.name - The name of the offer.
@@ -33,6 +43,24 @@ function validateOffer(offerData) {
   return errors;
 }
 
+/**
+ * Performs generic JSON schema validation on data.
+ * @param {object} schema - The JSON schema to validate against.
+ * @param {object} data - The data object to validate.
+ * @throws {Error} Throws an error with validation messages if validation fails.
+ */
+function validate(schema, data) {
+  const validateFn = ajv.compile(schema);
+  const valid = validateFn(data);
+  if (!valid) {
+    const errors = validateFn.errors.map(err => `${err.instancePath} ${err.message}`).join(', ');
+    const error = new Error(`Validation failed: ${errors}`);
+    error.statusCode = 400; // Bad Request
+    throw error;
+  }
+}
+
 module.exports = {
   validateOffer,
+  validate,
 };
