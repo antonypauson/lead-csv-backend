@@ -197,6 +197,21 @@ async function batchProcessAiLeads(leads, offer, ruleScores) {
 }
 
 
+/**
+ * Wrapper function to match the expected interface for scoring service.
+ * @param {Object} lead - The lead object.
+ * @param {Object} offer - The offer object.
+ * @param {Object} ruleScore - Optional rule score breakdown for context.
+ * @returns {Promise<{score: number, reasoning: string}>} AI scoring results in expected format.
+ */
+async function getAiScoreAndReasoning(lead, offer, ruleScore = null) {
+  const result = await getAiLeadScore(lead, offer, ruleScore);
+  return {
+    score: result.aiScore,
+    reasoning: result.aiReasoning
+  };
+}
+
 module.exports = {
   initializeGroqClient, // Renamed for Groq
   createContextualPrompt,
@@ -204,5 +219,6 @@ module.exports = {
   parseAIResponse,
   convertIntentToScore,
   getAiLeadScore,
+  getAiScoreAndReasoning,
   batchProcessAiLeads,
 };
