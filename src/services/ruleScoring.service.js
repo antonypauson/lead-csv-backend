@@ -80,7 +80,19 @@ function calculateRuleScore(lead, offer) {
   };
 }
 
+/**
+ * Wrapper function to match the expected interface for scoring service.
+ * @param {Object} lead - The lead object containing prospect information.
+ * @param {Object} offer - The offer object containing value propositions and ideal use cases.
+ * @returns {number} The total rule-based score (0-50).
+ */
+function scoreLead(lead, offer) {
+  const result = calculateRuleScore(lead, offer);
+  return result.totalScore;
+}
+
 module.exports = {
   calculateRuleScore,
+  scoreLead,
   MAX_RULE_SCORE,
 };
