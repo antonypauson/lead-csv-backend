@@ -1,0 +1,155 @@
+{
+  "info": {
+    "name": "Lead Intent Scorer API",
+    "description": "Complete API collection for testing the lead scoring pipeline",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "offerId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "leadIds",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Create Offer",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"AI-Powered Sales Lead Qualification\",\n  \"value_props\": [\n    \"Automate lead scoring\",\n    \"Improve sales efficiency\",\n    \"Focus on high-intent prospects\"\n  ],\n  \"ideal_use_cases\": [\n    \"SaaS Sales Teams\",\n    \"B2B Marketing Agencies\",\n    \"Enterprise Lead Generation\"\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/offers",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "offers"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response has offer ID\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.eql(true);",
+              "    pm.expect(jsonData.offer_id).to.be.a('string');",
+              "    pm.collectionVariables.set('offerId', jsonData.offer_id);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Upload Leads CSV",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "csvFile",
+              "type": "file",
+              "src": "./test_leads.csv"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/leads/upload",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "leads", "upload"]
+        }
+      }
+    },
+    {
+      "name": "3. Get All Leads",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/leads",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "leads"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "var leadIds = [];",
+              "",
+              "Object.values(jsonData.data).forEach(batch => {",
+              "    if (Array.isArray(batch)) {",
+              "        batch.forEach(lead => {",
+              "            leadIds.push(lead.id);",
+              "        });",
+              "    }",
+              "});",
+              "",
+              "pm.collectionVariables.set('leadIds', JSON.stringify(leadIds));",
+              "console.log('Extracted Lead IDs:', leadIds);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Score Leads",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"offerId\": \"{{offerId}}\",\n  \"leadIds\": {{leadIds}}\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/score",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "score"]
+        }
+      }
+    },
+    {
+      "name": "5. Get Results",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/results",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "results"]
+        }
+      }
+    }
+  ]
+}
