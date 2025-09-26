@@ -1,0 +1,26 @@
+meta {
+  name: 4. Score Leads
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/score
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "offerId": "{{offerId}}",
+    "leadIds": {{leadIds}}
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,48 @@
+meta {
+  name: 1. Create Offer
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/offers
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "AI-Powered Sales Lead Qualification",
+    "value_props": [
+      "Automate lead scoring",
+      "Improve sales efficiency",
+      "Focus on high-intent prospects"
+    ],
+    "ideal_use_cases": [
+      "SaaS Sales Teams",
+      "B2B Marketing Agencies",
+      "Enterprise Lead Generation"
+    ]
+  }
+}
+
+script:post-response {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(201);
+  });
+  
+  test("Response has offer ID", function () {
+      var jsonData = res.getBody();
+      expect(jsonData.success).to.eql(true);
+      expect(jsonData.offer_id).to.be.a('string');
+      bru.setVar('offerId', jsonData.offer_id);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

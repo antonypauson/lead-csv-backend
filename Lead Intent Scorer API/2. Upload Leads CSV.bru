@@ -1,0 +1,19 @@
+meta {
+  name: 2. Upload Leads CSV
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/leads/upload
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  csvFile: @file(test_leads.csv)
+}
+
+settings {
+  encodeUrl: true
+}

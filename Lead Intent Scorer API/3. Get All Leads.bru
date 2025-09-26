@@ -1,0 +1,31 @@
+meta {
+  name: 3. Get All Leads
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/leads
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  var jsonData = res.getBody();
+  var leadIds = [];
+  
+  Object.values(jsonData.data).forEach(batch => {
+      if (Array.isArray(batch)) {
+          batch.forEach(lead => {
+              leadIds.push(lead.id);
+          });
+      }
+  });
+  
+  bru.setVar('leadIds', JSON.stringify(leadIds));
+  console.log('Extracted Lead IDs:', leadIds);
+}
+
+settings {
+  encodeUrl: true
+}
